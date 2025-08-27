@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:SOE.Services"
+             x:Class="SOE.Views.ChatPage"
+             Title="{Binding RecipientName}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:MessageAlignmentConverter x:Key="MessageAlignmentConverter"/>
+            <local:MessageColorConverter x:Key="MessageColorConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="*,Auto">
+        <CollectionView x:Name="MessagesCollectionView"
+                       ItemsSource="{Binding Messages}"
+                       VerticalOptions="FillAndExpand">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="10" Margin="5"
+                           HorizontalOptions="{Binding IsIncoming, Converter={StaticResource MessageAlignmentConverter}}"
+                           BackgroundColor="{Binding IsIncoming, Converter={StaticResource MessageColorConverter}}"
+                           CornerRadius="10">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Content}" 
+                                   FontSize="14"
+                                   TextColor="{Binding IsIncoming, Converter={StaticResource MessageColorConverter}, ConverterParameter=Text}"/>
+                            <Label Text="{Binding Date, StringFormat='{0:HH:mm}'}" 
+                                   FontSize="10"
+                                   HorizontalOptions="End"
+                                   TextColor="{Binding IsIncoming, Converter={StaticResource MessageColorConverter}, ConverterParameter=Text}"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Padding="10" BackgroundColor="LightGray">
+            <Entry x:Name="MessageEntry" 
+                   Placeholder="Enter message"
+                   Completed="OnMessageEntryCompleted"
+                   BackgroundColor="White"
+                   TextColor="Black"
+                   ClearButtonVisibility="WhileEditing"/>
+            <Button Grid.Column="1" 
+                    Text="Send" 
+                    Clicked="SendClicked"
+                    Margin="5,0,0,0"
+                    Padding="20,0"
+                    BackgroundColor="#2196F3"
+                    TextColor="White"/>
+        </Grid>
+    </Grid>
+</ContentPage>
